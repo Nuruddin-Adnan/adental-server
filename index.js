@@ -45,15 +45,30 @@ async function run() {
 
         // ############ reviews api start ############
         app.get('/reviews', async (req, res) => {
-            const query = {};
+            let query = {};
+            if (req.query.email) {
+                query = { email: req.query.email }
+            }
+            if (req.query.serviceId) {
+                query = { serviceId: req.query.serviceId }
+            }
+
             const cursor = reviewCollection.find(query).sort({ createdAt: -1 });
             const reviews = await cursor.toArray();
             res.send(reviews);
         })
+
         app.post('/reviews', async (req, res) => {
             const data = req.body;
             await reviewCollection.insertOne(data);
             res.send(data);
+        })
+
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
         })
         // ############ End of reviews api ############
 
