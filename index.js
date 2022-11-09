@@ -44,10 +44,16 @@ async function run() {
 
 
         // ############ reviews api start ############
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = reviewCollection.find(query).sort({ createdAt: -1 });
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        })
         app.post('/reviews', async (req, res) => {
             const data = req.body;
-            const result = await reviewCollection.insertOne(data);
-            res.send(result);
+            await reviewCollection.insertOne(data);
+            res.send(data);
         })
         // ############ End of reviews api ############
 
