@@ -129,6 +129,7 @@ async function run() {
                     review: review
                 }
             }
+
             const result = await reviewCollection.updateOne(query, updatedDoc);
             res.send(result);
         })
@@ -141,9 +142,6 @@ async function run() {
         })
         // ############ End of reviews api ############
 
-
-        // ############ ? api start ############
-        // ############ End of ? api ############
     }
     finally {
 
