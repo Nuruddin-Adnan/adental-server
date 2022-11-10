@@ -22,7 +22,7 @@ async function run() {
         // ############ services api start ############
         app.get('/services', async (req, res) => {
             const query = {};
-            const cursor = serviceCollection.find(query);
+            const cursor = serviceCollection.find(query).sort({ createdAt: -1 });
             const services = await cursor.toArray();
             res.send(services);
         })
@@ -30,7 +30,7 @@ async function run() {
         app.get('/services/limit/:number', async (req, res) => {
             const number = parseInt(req.params.number);
             const query = {};
-            const cursor = serviceCollection.find(query).limit(number);
+            const cursor = serviceCollection.find(query).sort({ createdAt: -1 }).limit(number);
             const services = await cursor.toArray();
             res.send(services);
         })
@@ -40,6 +40,12 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const service = await serviceCollection.findOne(query);
             res.send(service)
+        })
+
+        app.post('/services', async (req, res) => {
+            const data = req.body;
+            await serviceCollection.insertOne(data);
+            res.send(data);
         })
         // ############ End of services api ############
 
